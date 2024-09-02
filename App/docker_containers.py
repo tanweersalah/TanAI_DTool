@@ -80,11 +80,6 @@ def container():
 
         """
 
-    card_html +=""" 
-     
-      </div>  
-     
-        """
 
     # Close the container
     st.markdown( card_html , unsafe_allow_html=True)
@@ -92,4 +87,3 @@ def container():
     
 
     
-
