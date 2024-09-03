@@ -5,6 +5,13 @@
       <div v-for="(item, index) in container_lists" :key="index">
         <DockerContainer :contianerDetails="item" />
       </div>
+      <q-inner-loading
+        dark
+        :showing="loadvisible"
+        label="Please wait..."
+        label-class="text-teal"
+        label-style="font-size: 1.1em"
+      />
     </div>
   </div>
 </template>
@@ -12,6 +19,7 @@
 <style>
 .docker-list {
   padding-top: 20px;
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
@@ -25,33 +33,17 @@ import DockerContainer from "../components/DockerContainer.vue";
 export default {
   components: { DockerContainer },
   async beforeMount() {
+    this.loadvisible = true;
     this.container_lists = await this.docker.getContainerList();
+    this.loadvisible = false;
     console.log(container_lists);
   },
   methods: {},
   data() {
     return {
+      loadvisible: true,
       docker: inject("docker"),
-      container_lists: [
-        {
-          name: "1",
-          ports: "8080:80",
-          status: "running",
-          image: "nginx:latest",
-        },
-        {
-          name: "2",
-          ports: "3306:3306",
-          status: "stopped",
-          image: "mysql:5.7",
-        },
-        {
-          name: "3",
-          ports: "6379:6379",
-          status: "running",
-          image: "redis:alpine",
-        },
-      ],
+      container_lists: null,
     };
   },
 };

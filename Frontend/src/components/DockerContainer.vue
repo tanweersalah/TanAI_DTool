@@ -15,8 +15,7 @@
     <q-separator dark />
 
     <q-card-actions>
-      <q-btn flat>Action 1</q-btn>
-      <q-btn flat>Action 2</q-btn>
+      <q-btn flat @click="openLogs(contianerDetails.id)">Check Logs</q-btn>
     </q-card-actions>
   </q-card>
 </template>
@@ -24,5 +23,10 @@
 <script>
 export default {
   props: ["contianerDetails"],
+  methods: {
+    openLogs(id) {
+      this.$router.push("/logs/" + id);
+    },
+  },
 };
 </script>
