@@ -44,7 +44,7 @@ chain = prompt|model|parser
 app = FastAPI(title="DTool API", version="1", description="API Server using langchain")
 
 origins = [
-    "https://tangpt.tanflix.me/",
+    "https://dtool-api.tanflix.me",
     "http://localhost",
     "http://localhost:8080",
     "http://localhost:5173",
