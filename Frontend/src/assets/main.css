@@ -9,8 +9,7 @@
 
 a,
 .green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
+  color: rgba(0, 189, 126, 0.651);
   transition: 0.4s;
   padding: 3px;
 }
@@ -19,6 +18,16 @@ a,
   a:hover {
     background-color: hsla(160, 100%, 37%, 0.2);
   }
+}
+strong {
+  font-weight: bolder !important;
+  color: rgb(197 136 21 / 94%);
+}
+code {
+  color: rgb(0, 0, 0);
+  background-color: rgb(255, 255, 255);
+  border-radius: 2px;
+  padding: 2px;
 }
 
 @media (min-width: 1024px) {

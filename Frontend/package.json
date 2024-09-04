@@ -10,10 +10,12 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.16.12",
+    "@quasar/quasar-ui-qmarkdown": "^2.0.0-beta.10",
     "axios": "^1.7.7",
     "date-fns": "^3.6.0",
     "quasar": "^2.16.9",
     "vue": "^3.4.21",
+    "vue-markdown-render": "^2.2.1",
     "vue-router": "^4.3.0"
   },
   "devDependencies": {
