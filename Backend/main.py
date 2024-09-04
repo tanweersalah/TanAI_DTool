@@ -44,7 +44,7 @@ chain = prompt|model|parser
 app = FastAPI(title="DTool API", version="1", description="API Server using langchain")
 
 origins = [
-    "https://dtool-api.tanflix.me",
+    "https://tanai.tanflix.me",
     "http://localhost",
     "http://localhost:8080",
     "http://localhost:5173",
@@ -53,7 +53,7 @@ origins = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
