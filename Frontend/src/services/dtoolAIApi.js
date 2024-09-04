@@ -4,7 +4,7 @@ import axios from "axios";
 
 export default class DToolAPIService {
   constructor() {
-    this.baseUrl = "http://localhost:8080/chain/invoke";
+    this.baseUrl = "http://dtool-api.tanflix.me/chain/invoke";
   }
 
   async callApi(input) {
