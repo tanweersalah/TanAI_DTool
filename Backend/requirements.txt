@@ -1,2 +1,9 @@
 fastapi[standard]
 uvicorn
+langchain
+langchain-community
+langchain_groq
+python-dotenv
+langserve
+uvicorn
+pydantic
