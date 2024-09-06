@@ -1,3 +1,4 @@
+from collections import defaultdict
 import docker
 from fastapi import FastAPI, HTTPException, Query
 from pydantic import BaseModel
@@ -53,7 +54,8 @@ async def list_containers():
                 'Privileged': container.attrs['HostConfig']['Privileged'],
             }
         )
-        container_info_list.append(container_info)
+        if (container.status== "running"):
+            container_info_list.append(container_info)
     return container_info_list
 
 @app.get("/logs/{container_id}", response_model=ContainerLogs)
@@ -66,19 +68,30 @@ async def get_container_logs(
         container = client.containers.get(container_id)
         logs = container.logs(tail=tail, stderr=True, stdout=True, timestamps=True).decode('utf-8')
         
-        log_entries = []
+        log_dict = defaultdict(list)
+        current_timestamp = None
         for line in logs.strip().split('\n'):
             parts = line.split(' ', 1)
             if len(parts) == 2:
-                timestamp, message = parts
-                if not filter_errors or 'error' in message.lower():
-                    log_entries.append(LogEntry(timestamp=timestamp, message=message))
+                current_timestamp, message = parts
+                
+                log_dict[current_timestamp].append(message)
+            elif current_timestamp:
+                # This is a continuation of the previous log entry
+                log_dict[current_timestamp][-1] += '\n' + line
+
+        log_entries = []
+        for timestamp, messages in log_dict.items():
+            full_message = '\n'.join(messages)
+            if not filter_errors or 'error' in full_message.lower():
+                log_entries.append(LogEntry(timestamp=timestamp, message=full_message))
 
         return ContainerLogs(container_id=container_id, logs=log_entries)
     except docker.errors.NotFound:
         raise HTTPException(status_code=404, detail="Container not found")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 if __name__ == '__main__':
     import uvicorn
