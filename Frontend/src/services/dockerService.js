@@ -26,6 +26,7 @@ export default class DockerService {
           },
         }
       );
+
       return response.data;
     } catch (error) {
       throw new Error(`Error fetching container logs: ${error.message}`);

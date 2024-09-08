@@ -2,8 +2,34 @@
   <div>
     <h3>Select a log to get help</h3>
 
+    <q-toolbar
+      class="bg-teal outlined text-white shadow-2 rounded-borders toolbar"
+    >
+      <q-btn to="/" stretch flat label="Home" />
+
+      <q-space />
+
+      <q-btn stretch flat icon="sync" @click="getlogs" />
+      <q-btn stretch flat icon="sort" @click="sortLogs" />
+
+      <q-separator dark vertical />
+
+      <q-select
+        class="log_count"
+        dark
+        filled
+        v-model="logs_count"
+        :options="count_options"
+        label="Logs Count"
+      />
+
+      <q-separator dark vertical />
+
+      <q-toggle v-model="error_only" color="red" label="Error Only" />
+    </q-toolbar>
+
     <div :class="['log-grid', { 'two-column': isTwoColumn }]">
-      <q-scroll-area style="height: 80vh; max-width: 100vw" class="log-area">
+      <q-scroll-area class="log-area">
         <q-list dark bordered separator style="max-width: 90vw">
           <q-item
             clickable
@@ -85,14 +111,48 @@ export default {
       this.chatLog = await this.dtoolApi.callApi(log);
       this.selectedIndex = index;
     },
+    async getlogs() {
+      console.log("Refresh logs");
+      this.logs = await this.docker.getContainerLogs(
+        this.id,
+        this.logs_count,
+        this.error_only
+      );
+      this.isAscending = !this.isAscending;
+      this.sortLogs();
+    },
+
+    sortLogs() {
+      console.log(this.logs.logs);
+      this.isAscending = !this.isAscending;
+      this.logs.logs.sort((a, b) => {
+        const timestampA = new Date(a.timestamp).getTime();
+        const timestampB = new Date(b.timestamp).getTime();
+        return this.isAscending
+          ? timestampA - timestampB
+          : timestampB - timestampA;
+      });
+    },
   },
   async beforeMount() {
     this.loadvisible = true;
-    this.logs = await this.docker.getContainerLogs(this.id, 10, false);
+    await this.getlogs();
     this.loadvisible = false;
+  },
+  watch: {
+    error_only() {
+      this.getlogs();
+    },
+    logs_count() {
+      this.getlogs();
+    },
   },
   data() {
     return {
+      logs_count: 10,
+      isAscending: true,
+      count_options: [10, 30, 50, 100, 200],
+      error_only: false,
       isTwoColumn: false,
       loadvisible: true,
       chatLog: null,
@@ -137,12 +197,21 @@ export default {
 </script>
 
 <style scoped>
+.toolbar {
+  margin-top: 20px;
+
+  height: 10px;
+}
+
+.log_count {
+  width: 130px;
+}
 .log-area {
-  margin-top: 50px;
+  height: 85vh;
+  max-width: 100%;
+  margin-top: 20px;
 }
-.llm-area > strong {
-  font-weight: bolder !important;
-}
+
 .selectedLog {
   background-color: rgba(0, 94, 255, 0.257);
 }

@@ -36,7 +36,7 @@ export default {
     this.loadvisible = true;
     this.container_lists = await this.docker.getContainerList();
     this.loadvisible = false;
-    console.log(container_lists);
+    console.log(this.container_lists);
   },
   methods: {},
   data() {

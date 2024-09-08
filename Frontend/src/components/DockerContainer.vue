@@ -8,8 +8,9 @@
     <q-card-section>
       {{ contianerDetails.status }}
     </q-card-section>
+
     <q-card-section>
-      {{ contianerDetails.image }}
+      Ports : {{ getPorts(contianerDetails.ports) }}
     </q-card-section>
 
     <q-separator dark />
@@ -26,6 +27,11 @@ export default {
   methods: {
     openLogs(id) {
       this.$router.push("/logs/" + id);
+    },
+    getPorts(ports) {
+      const firstKey = Object.keys(ports)[0];
+      console.log(ports[firstKey][0]["HostPort"]);
+      return `${firstKey} -> ${ports[firstKey][0]["HostPort"]}`;
     },
   },
 };
